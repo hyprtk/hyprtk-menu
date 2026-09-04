@@ -3,6 +3,18 @@
 All notable changes to hyprtk-menu are documented in this file.
 Dates are in YYYY-MM-DD format.
 
+## [0.1.2] - 2026-09-04
+
+### Changed
+
+- `position: "auto"` now follows hyprtk-bar's **geometry**, not just its edge:
+  reads `width` + `align` + `margin` + `height` from
+  `~/.config/hyprtk-bar/config.json` and positions the menu's `align`
+  relative to the bar's horizontal extent (left edge / center / right edge of
+  the bar) instead of the screen edges. The menu also clears the bar's full
+  height (`height` + 2*`margin` + gap) and re-anchors live while open when
+  the bar config changes.
+
 ## [0.1.1] - 2026-09-04
 
 ### Changed
