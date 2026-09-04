@@ -2,7 +2,6 @@
 
 import json
 import os
-import re
 import shutil
 import subprocess
 import pwd
@@ -199,45 +198,19 @@ class MenuWindow(Gtk.Window):
 
     # -- layer shell ------------------------------------------------------
 
-    def _detect_waybar_edge(self):
-        """Return 'top' or 'bottom' based on the active waybar theme."""
-        theme_name = ""
-        theme_file = os.path.expanduser("~/.cache/.themestyle.sh")
-        try:
-            with open(theme_file, encoding="utf-8") as f:
-                theme_name = f.read().split(";")[0].strip().strip("/")
-        except OSError:
-            pass
-        if theme_name.endswith("-bottom"):
-            return "bottom"
-        if theme_name.endswith("-top"):
-            return "top"
-        if theme_name:
-            config_path = os.path.expanduser(
-                "~/hyprtk/configs/waybar/themes/%s/config" % theme_name
-            )
-            edge = self._waybar_config_edge(config_path)
-            if edge:
-                return edge
-        return None
+    def _detect_bar_edge(self):
+        """Return 'top' or 'bottom' for the menu's anchor edge.
 
-    def _waybar_config_edge(self, config_path):
-        """Read top/bottom from a waybar theme config (position or layer)."""
+        Reads hyprtk-bar's config, which carries the bar edge directly.
+        """
+        bar_config = os.path.expanduser("~/.config/hyprtk-bar/config.json")
         try:
-            with open(config_path, encoding="utf-8") as f:
-                raw = f.read()
-            # Strip // comments and trailing commas so JSON tolerates waybar's style.
-            stripped = re.sub(r"//.*", "", raw)
-            stripped = re.sub(r",(\s*[}\]])", r"\1", stripped)
-            data = json.loads(stripped)
+            with open(bar_config, encoding="utf-8") as f:
+                position = json.load(f).get("position")
+            if position in ("top", "bottom"):
+                return position
         except (OSError, ValueError):
-            return None
-        position = data.get("position")
-        if position in ("bottom", "top"):
-            return position
-        layer = data.get("layer")
-        if layer in ("bottom", "top"):
-            return layer
+            pass
         return None
 
     def _apply_position(self):
@@ -245,7 +218,7 @@ class MenuWindow(Gtk.Window):
         edge = "top"
         horizontal = "left"
         if position == "auto":
-            edge = self._detect_waybar_edge() or "top"
+            edge = self._detect_bar_edge() or "top"
             align = self.config.get("align", "left")
             horizontal = align if align in ("left", "center", "right") else "left"
         elif position == "center":
@@ -1411,9 +1384,9 @@ class MenuWindow(Gtk.Window):
         content.pack_start(_section_label("Position"), False, False, 0)
         position = self.config.get("position", "auto")
 
-        # Auto option (follow waybar edge)
+        # Auto option (follow hyprtk-bar edge)
         auto_radio = Gtk.RadioButton.new_with_label(
-            None, "Auto (follow waybar)"
+            None, "Auto (follow hyprtk-bar)"
         )
         auto_radio.get_style_context().add_class("settings-radio")
         if position == "auto":
@@ -1802,7 +1775,7 @@ class MenuWindow(Gtk.Window):
     # -- show / hide ------------------------------------------------------
 
     def _check_wal(self):
-        """Live-update pywal colors and waybar-theme profile while open."""
+        """Live-update pywal colors and bar-theme profile while open."""
         changed = False
         wal_mtime = theme.wal_mtime()
         if wal_mtime and wal_mtime != self._wal_mtime:
@@ -1825,7 +1798,7 @@ class MenuWindow(Gtk.Window):
             print("hyprtk-menu: theme css update failed: %s" % exc, flush=True)
         else:
             print("hyprtk-menu: theme updated", flush=True)
-        # The waybar edge (top/bottom) may have changed too — re-anchor.
+        # The bar edge (top/bottom) may have changed too — re-anchor.
         self._apply_position()
         if was_visible:
             GLib.idle_add(self._remap_after_update)

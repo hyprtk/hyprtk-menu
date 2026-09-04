@@ -3,6 +3,18 @@
 All notable changes to hyprtk-menu are documented in this file.
 Dates are in YYYY-MM-DD format.
 
+## [0.1.1] - 2026-09-04
+
+### Changed
+
+- `position: "auto"` now follows **hyprtk-bar** instead of waybar: reads
+  `~/.config/hyprtk-bar/config.json` and anchors the menu on the bar's edge
+  (`position: "top"` → below the bar, `"bottom"` → above the bar). Waybar
+  theme-config parsing removed.
+- Settings dialogue "Auto (follow waybar)" renamed to
+  "Auto (follow hyprtk-bar)"; theme-profile comments/docs updated to
+  reference the bar theme.
+
 ## [0.1.0] - 2026-09-03
 
 Initial release. Whisker-style application menu for Hyprland (GTK3 +
