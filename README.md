@@ -1,9 +1,21 @@
 # hyprtk-menu
 
+> **ARCHIVED — 2026-09-09 — merged into hyprtk-bar.**
+> The start menu is now built into **hyprtk-bar** as an in-process module: it
+> is toggled from the start button or `Super+Space`, themed by the bar, and
+> configured from the bar settings dialogue's *Menu* tab. Config lives under
+> `menu` in `~/.config/hyprtk-bar/config.json` (this app's old
+> `~/.config/hyprtk-menu/config.json` is auto-imported on first run). This
+> repository is kept for reference only.
+
 A Whisker-style application menu for Hyprland, written in Python (GTK3 +
 gtk-layer-shell). Opens as a floating overlay popup styled with your pywal
 glass aesthetic — searchable launcher with category sidebar, pinned favorites,
 recents, and power buttons.
+
+> **Note:** the sections below describe the standalone app as it was before
+> the merge. The same functionality now ships inside hyprtk-bar — see the
+> hyprtk-bar README's *Start menu* section for current usage.
 
 ## Features
 

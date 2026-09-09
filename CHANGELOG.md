@@ -3,6 +3,18 @@
 All notable changes to hyprtk-menu are documented in this file.
 Dates are in YYYY-MM-DD format.
 
+## [0.1.5] - 2026-09-09 — ARCHIVED
+
+### Changed
+
+- **Merged into hyprtk-bar** — the standalone app is no longer installed. The
+  start menu is now an in-process module of hyprtk-bar
+  (`src/hyprtk_bar/menu/`): toggled by the start button or `Super+Space`
+  (SIGUSR1), themed by the bar, configured from the bar settings dialogue's
+  *Menu* tab, with settings under `menu` in `~/.config/hyprtk-bar/config.json`.
+  The old `~/.config/hyprtk-menu/config.json` is auto-imported on first run.
+- This repository is archived and kept for reference only.
+
 ## [0.1.4] - 2026-09-07
 
 ### Changed
